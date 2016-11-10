@@ -12,15 +12,13 @@ class Api::V1::Mp3sController < ApplicationController
     respond_with  @mp3
   end
 
-
   # POST /mp3s
   def create
     @mp3 = Mp3.new(mp3_params)
-
     if @mp3.save
-      render json: @mp3, status: :created, location: @mp3
+      respond_with(:api, :v1, @mp3, status: 200)
     else
-      render json: @mp3.errors, status: :unprocessable_entity
+      respond_with(:api, :v1, @mp3.errors, status: 422)
     end
   end
 
@@ -29,7 +27,7 @@ class Api::V1::Mp3sController < ApplicationController
     if @mp3.update(mp3_params)
       render json: @mp3
     else
-      render json: @mp3.errors, status: :unprocessable_entity
+      render json: @mp3.errors, status: 422
     end
   end
 
@@ -39,13 +37,13 @@ class Api::V1::Mp3sController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_mp3
-      @mp3 = Mp3.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_mp3
+    @mp3 = Mp3.find(params[:id])
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def mp3_params
-      params.require(:mp3).permit(:album, :title, :artist, :genre, :email)
-    end
+  # Only allow a trusted parameter "white list" through.
+  def mp3_params
+    params.permit(:album, :title, :artist, :genre, :email, :filename, :data)
+  end
 end
